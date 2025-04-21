@@ -17,17 +17,17 @@ public class Main {
         taskManager.addTask(task1);
         taskManager.addTask(task2);
         System.out.println("\nСписок обычных задач:");
-        taskManager.printAllTasks();
+        System.out.println(taskManager.getAllTasks().toString());
 
         //Получить задачу по id
         System.out.println("\nПолучаем задачу по ID:");
-        taskManager.getTaskById(task2.getTaskId());
+        System.out.println(taskManager.getTaskById(task2.getTaskId()).toString());
 
         // Обновление задачи
         Task task3 = new Task("Обновлённая задача 2", "Обновлённое описание задачи 2", TaskStatus.IN_PROGRESS);
         taskManager.updateTask(task2, task3);
         System.out.println("\nСписок обновлённых задач:");
-        taskManager.printAllTasks();
+        System.out.println(taskManager.getAllTasks().toString());
 
         //Создание новых эпиков
         EpicTask epicTask1 = new EpicTask("Эпик 1", "Описание эпика 1");
@@ -35,17 +35,17 @@ public class Main {
         taskManager.addEpicTask(epicTask1);
         taskManager.addEpicTask(epicTask2);
         System.out.println("\nСписок эпиков:");
-        taskManager.printAllEpicTasks();
+        System.out.println(taskManager.getAllEpicTasks().toString());
 
         //Получить эпик по id
         System.out.println("\nПолучаем эпик по ID:");
-        taskManager.getEpicTaskById(epicTask2.getTaskId());
+        System.out.println(taskManager.getEpicTaskById(epicTask2.getTaskId()).toString());
 
         //Обновление эпика
-        EpicTask epicTask3 = new EpicTask("Обновлённый эпик","Обновлённое описание эпика", TaskStatus.IN_PROGRESS);
+        EpicTask epicTask3 = new EpicTask("Обновлённый эпик","Обновлённое описание эпика");
         taskManager.updateEpicTask(epicTask2, epicTask3);
         System.out.println("\nСписок обновлённых эпиков:");
-        taskManager.printAllEpicTasks();
+        System.out.println(taskManager.getAllEpicTasks().toString());
 
         //Создание новых подзадач к эпикам
         Subtask subtask1 = new Subtask("Подзадача 1.1", "Описание подзадачи 1.1", epicTask1.getTaskId());
@@ -55,11 +55,11 @@ public class Main {
         taskManager.addSubtask(subtask2);
         taskManager.addSubtask(subtask3);
         System.out.println("\nСписок подзадач:");
-        taskManager.printAllSubtasks();
+        System.out.println(taskManager.getAllSubtasks().toString());
 
-        //Получить подзадачи по id
-        System.out.println("\nПолучаем подзадачи по ID:");
-        taskManager.getSubtaskById(epicTask1.getTaskId());
+        //Получить подзадачу по id
+        System.out.println("\nПолучаем подзадачу по ID:");
+        System.out.println(taskManager.getSubtaskById(subtask1.getTaskId()).toString());
 
         //Обновление подзадач
         Subtask newSubtask1 = new Subtask("Обновлённая подзадача 1.1", "Описание обновлённой подзадачи 1.1",
@@ -72,7 +72,7 @@ public class Main {
         taskManager.updateSubtask(subtask2, newSubtask2);
         taskManager.updateSubtask(subtask3, newSubtask3);
         System.out.println("\nСписок обновлённых подзадач:");
-        taskManager.printAllSubtasks();
+        System.out.println(taskManager.getAllSubtasks().toString());
 
         //Проверка статусов эпика в зависимости от статуса подзадач
         System.out.println("\nСтатус эпика 1: " + taskManager.getEpicTasks(epicTask1.getTaskId()).getTaskStatus());
@@ -80,31 +80,45 @@ public class Main {
 
         //Удаление задачи
         taskManager.deleteTaskById(task2);
-        System.out.println("\nСписок задач после удаления:");
-        taskManager.printAllTasks();
+        System.out.println("\nСписок задач после удаления одной задачи:");
+        System.out.println(taskManager.getAllTasks().toString());
 
         //Удаление эпика
         taskManager.deleteEpicTaskById(epicTask2);
-        System.out.println("\nСписок эпиков после удаления:");
-        taskManager.printAllEpicTasks();
+        System.out.println("\nСписок эпиков после удаления одного эпика:");
+        System.out.println(taskManager.getAllEpicTasks().toString());
 
         //Удаление подзадачи
         taskManager.deleteSubtaskById(subtask2);
-        System.out.println("\nСписок подзадач после удаления:");
-        taskManager.printAllSubtasks();
+        System.out.println("\nСписок подзадач после удаления одной подзадачи:");
+        System.out.println(taskManager.getAllSubtasks().toString());
 
         //Проверка, меняется ли статус эпика при удалении задач
-        taskManager.addSubtask(subtask2);
         Subtask newSubtask4 = new Subtask("Обновлённая подзадача 1.2", "Описание обновлённой подзадачи 1.2",
                 TaskStatus.IN_PROGRESS, epicTask1.getTaskId());
-        taskManager.updateSubtask(subtask2, newSubtask4);
+        taskManager.addSubtask(newSubtask4);
         System.out.println("\nНовый список подзадач:");
-        taskManager.printAllSubtasks();
+        System.out.println(taskManager.getAllSubtasks().toString());
         System.out.println("\nСтатус эпика 1: " + taskManager.getEpicTasks(epicTask1.getTaskId()).getTaskStatus());
         taskManager.deleteSubtaskById(newSubtask4);
         System.out.println("\nУдалили подзадачу IN_PROGRESS");
-        taskManager.printAllSubtasks();
+        System.out.println(taskManager.getAllSubtasks().toString());
         System.out.println("\nСтатус эпика 1: " + taskManager.getEpicTasks(epicTask1.getTaskId()).getTaskStatus());
+
+        //Удаление всех задач
+        taskManager.deleteAllTasks();
+        System.out.println("\nСписок обычных задач (после удаления всех задач:");
+        System.out.println(taskManager.getAllTasks().toString());
+
+        //Удаление всех эпиков
+        taskManager.deleteAllEpicTasks();
+        System.out.println("\nСписок эпиков (после удаления всех эпиков:");
+        System.out.println(taskManager.getAllEpicTasks().toString());
+
+        //Удаление всех задач
+        taskManager.deleteAllSubtasks();
+        System.out.println("\nСписок подзадач (после удаления всех подзадач:");
+        System.out.println(taskManager.getAllSubtasks().toString());
     }
 }
 
