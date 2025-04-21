@@ -27,6 +27,13 @@ public class Task {
         taskStatus = TaskStatus.NEW;
     }
 
+    public Task(String name, String description, TaskStatus taskStatus, int taskId) {
+        this.name = name;
+        this.description = description;
+        this.taskId = taskId;
+        this.taskStatus = taskStatus;
+    }
+
     public TaskStatus getTaskStatus() {
         return taskStatus;
     }
