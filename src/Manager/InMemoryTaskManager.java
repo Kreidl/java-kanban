@@ -8,7 +8,7 @@ import Tasks.TaskStatus;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class InMemoryTaskManager {
+public class InMemoryTaskManager  {
     private int count = 0;
 
     private final HashMap<Integer, Task> tasks;
@@ -115,16 +115,16 @@ public class InMemoryTaskManager {
         return new ArrayList<>(subtasks.values());
     }
 
-    public void deleteAllTasks () {
+    public void deleteAllTasks() {
         tasks.clear();
     }
 
-    public void deleteAllEpicTasks () {
+    public void deleteAllEpicTasks() {
         epicTasks.clear();
         subtasks.clear();
     }
 
-    public void deleteAllSubtasks () {
+    public void deleteAllSubtasks() {
         for (EpicTask epicTask : epicTasks.values()) {
             epicTask.getSubtasks().clear();
             updateEpicTaskStatus(epicTask);
