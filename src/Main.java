@@ -74,6 +74,10 @@ public class Main {
         System.out.println("\nСписок обновлённых подзадач:");
         System.out.println(inMemoryTaskManager.getAllSubtasks().toString());
 
+        //Проверка истории просмотра задач
+        System.out.println("\nПроверка просмотра истории задач.");
+        printAllTasks(inMemoryTaskManager);
+
         //Проверка статусов эпика в зависимости от статуса подзадач
         System.out.println("\nСтатус эпика 1: " + inMemoryTaskManager.getEpicTaskById(epicTask1.getTaskId()).getTaskStatus());
         System.out.println("\nСтатус эпика 2: " + inMemoryTaskManager.getEpicTaskById(epicTask2.getTaskId()).getTaskStatus());
@@ -119,6 +123,32 @@ public class Main {
         inMemoryTaskManager.deleteAllSubtasks();
         System.out.println("\nСписок подзадач (после удаления всех подзадач:");
         System.out.println(inMemoryTaskManager.getAllSubtasks().toString());
+    }
+
+
+
+    private static void printAllTasks(InMemoryTaskManager manager) {
+        System.out.println("Задачи:");
+        for (Task task : manager.getAllTasks()) {
+            System.out.println(task);
+        }
+        System.out.println("Эпики:");
+        for (Task epic : manager.getAllEpicTasks()) {
+            System.out.println(epic);
+
+            for (Task task : manager.getEpicSubtasks(epic.getTaskId())) {
+                System.out.println("--> " + task);
+            }
+        }
+        System.out.println("Подзадачи:");
+        for (Task subtask : manager.getAllSubtasks()) {
+            System.out.println(subtask);
+        }
+
+        System.out.println("История:");
+        for (Task task : manager.getHistory()) {
+            System.out.println(task);
+        }
     }
 }
 
