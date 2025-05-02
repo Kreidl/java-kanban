@@ -8,14 +8,14 @@ import Tasks.TaskStatus;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class TaskManager {
+public class InMemoryTaskManager {
     private int count = 0;
 
     private final HashMap<Integer, Task> tasks;
     private final HashMap<Integer, EpicTask> epicTasks;
     private final HashMap<Integer, Subtask> subtasks;
 
-    public TaskManager () {
+    public InMemoryTaskManager() {
         tasks = new HashMap<>();
         epicTasks = new HashMap<>();
         subtasks = new HashMap<>();
@@ -129,6 +129,7 @@ public class TaskManager {
             epicTask.getSubtasks().clear();
             updateEpicTaskStatus(epicTask);
         }
+        subtasks.clear();;
     }
 
     public boolean isEpicTaskDone (EpicTask epicTask) {
@@ -182,8 +183,12 @@ public class TaskManager {
         }
     }
 
-    public EpicTask getEpicTasks(int taskId) {
-        return epicTasks.get(taskId);
+    public ArrayList<Subtask> getEpicSubtasks(int epicId) {
+        EpicTask epicTask = epicTasks.get(epicId);
+        if (epicTask == null) {
+            return null;
+        }
+        return epicTask.getSubtasks();
     }
 }
 
