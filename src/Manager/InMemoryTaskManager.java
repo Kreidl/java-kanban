@@ -15,7 +15,7 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, EpicTask> epicTasks;
     private final HashMap<Integer, Subtask> subtasks;
 
-    HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
+    private final HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
     public InMemoryTaskManager() {
         tasks = new HashMap<>();
@@ -25,6 +25,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addTask(Task task) {
+        if (task == null) {
+            return;
+        }
         count++;
         task.setTaskId(count);
         tasks.put(count, task);
@@ -32,6 +35,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addEpicTask(EpicTask epicTask) {
+        if (epicTask == null) {
+            return;
+        }
         count++;
         epicTask.setTaskId(count);
         epicTasks.put(count, epicTask);
@@ -39,6 +45,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addSubtask(Subtask subtask) {
+        if (subtask == null) {
+            return;
+        }
         subtask.setEpicId(subtask.getTaskId());
         count++;
         subtask.setTaskId(count);
@@ -161,7 +170,7 @@ public class InMemoryTaskManager implements TaskManager {
             epicTask.getSubtasks().clear();
             updateEpicTaskStatus(epicTask);
         }
-        subtasks.clear();;
+        subtasks.clear();
     }
 
     public boolean isEpicTaskDone (EpicTask epicTask) {
