@@ -61,7 +61,15 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void addMoreThen10Tasks() {
+    void cannotAddVoidTask() {
+        Task task = null;
+        inMemoryHistoryManager.add(task);
+        ArrayList<Task> tasks = new ArrayList<>();
+        assertEquals(tasks, inMemoryHistoryManager.getHistory(), "Списки истории не совпадают");
+    }
+
+    @Test
+    void cannotAddMoreThen10Tasks() {
         Task task4 = new Task("Задача 4", "Описание задачи 4", TaskStatus.NEW, 4);
         Task task5 = new Task("Задача 5", "Описание задачи 5", TaskStatus.NEW, 5);
         Task task6 = new Task("Задача 6", "Описание задачи 6", TaskStatus.NEW, 6);
