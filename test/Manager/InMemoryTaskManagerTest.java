@@ -68,6 +68,30 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
+    void cannotAddVoidTask() {
+        Task task = null;
+        manager.addTask(task);
+        ArrayList<Task> tasks= new ArrayList<>();
+        assertEquals(tasks, manager.getAllTasks(), "Списки задач не совпадают");
+    }
+
+    @Test
+    void cannotAddVoidEpicTask() {
+        EpicTask epicTask = null;
+        manager.addEpicTask(epicTask);
+        ArrayList<EpicTask> epicTasks= new ArrayList<>();
+        assertEquals(epicTasks, manager.getAllEpicTasks(), "Списки эпиков не совпадают");
+    }
+
+    @Test
+    void cannotAddVoidSubtask() {
+        Subtask subtask = null;
+        manager.addSubtask(subtask);
+        ArrayList<Subtask> subtasks= new ArrayList<>();
+        assertEquals(subtasks, manager.getAllSubtasks(), "Списки подзадач не совпадают");
+    }
+
+    @Test
     void updateTaskTest() {
         Task task1 = new Task("Задача 1","Описание задачи 1");
         manager.addTask(task1);
@@ -255,14 +279,16 @@ class InMemoryTaskManagerTest {
     @Test
     void getHistoryTest() {
         Task task1 = new Task("Задача 1","Описание задачи 1");
+        manager.addTask(task1);
         EpicTask epicTask1 = new EpicTask("Эпик 1","Описание эпика 1");
         manager.addEpicTask(epicTask1);
         Subtask subtask1 = new Subtask("Подзадача 1.1","Описание подзадачи 1.1", epicTask1.getTaskId());
+        manager.addSubtask(subtask1);
         ArrayList<Task> allTasks = new ArrayList<>();
         allTasks.addAll(manager.getAllTasks());
-        for (Task epic : manager.getAllEpicTasks()) {
-            allTasks.add(epic);
-            allTasks.addAll(manager.getEpicSubtasks(epic.getTaskId()));
+        for (Task epicTask : manager.getAllEpicTasks()) {
+            allTasks.add(epicTask);
+            allTasks.addAll(manager.getEpicSubtasks(epicTask.getTaskId()));
         }
         allTasks.addAll(manager.getAllSubtasks());
         assertEquals(allTasks, manager.getHistory(), "История просмотров работает некорректно");
