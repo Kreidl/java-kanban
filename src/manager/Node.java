@@ -1,6 +1,6 @@
-package Manager;
+package manager;
 
-import Tasks.Task;
+import tasks.Task;
 
 public class Node {
     private Task element;
@@ -23,10 +23,6 @@ public class Node {
 
     public Task getElement() {
         return element;
-    }
-
-    public void setElement(Task element) {
-        this.element = element;
     }
 
     public Node getPrev() {

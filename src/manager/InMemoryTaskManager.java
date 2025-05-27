@@ -1,9 +1,9 @@
-package Manager;
+package manager;
 
-import Tasks.EpicTask;
-import Tasks.Subtask;
-import Tasks.Task;
-import Tasks.TaskStatus;
+import tasks.EpicTask;
+import tasks.Subtask;
+import tasks.Task;
+import tasks.TaskStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -185,7 +185,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtasks.clear();
     }
 
-    public boolean isEpicTaskDone (EpicTask epicTask) {
+    public boolean isEpicTaskDone(EpicTask epicTask) {
         boolean isItDone = false;
         for (Subtask subtask : epicTask.getSubtasks()) {
             if (subtask.getTaskStatus() == TaskStatus.DONE) {
@@ -198,7 +198,7 @@ public class InMemoryTaskManager implements TaskManager {
         return isItDone;
     }
 
-    public boolean isEpicTaskInProgress (EpicTask epicTask) {
+    public boolean isEpicTaskInProgress(EpicTask epicTask) {
         boolean isItInProgress = false;
         for (Subtask subtask : epicTask.getSubtasks()) {
             if (subtask.getTaskStatus() == TaskStatus.IN_PROGRESS) {
@@ -209,7 +209,7 @@ public class InMemoryTaskManager implements TaskManager {
         return isItInProgress;
     }
 
-    public boolean isEpicTaskNew (EpicTask epicTask) {
+    public boolean isEpicTaskNew(EpicTask epicTask) {
         boolean isItNew = false;
         if (epicTask.getSubtasks().isEmpty()) {
             isItNew = true;
@@ -226,7 +226,7 @@ public class InMemoryTaskManager implements TaskManager {
         return isItNew;
     }
 
-    public void updateEpicTaskStatus (EpicTask epicTask) {
+    public void updateEpicTaskStatus(EpicTask epicTask) {
         if (isEpicTaskNew(epicTask)) {
             epicTask.setTaskStatus(TaskStatus.NEW);
         } else if (isEpicTaskInProgress(epicTask)) {
