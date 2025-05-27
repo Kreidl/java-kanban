@@ -284,13 +284,7 @@ class InMemoryTaskManagerTest {
         manager.addEpicTask(epicTask1);
         Subtask subtask1 = new Subtask("Подзадача 1.1","Описание подзадачи 1.1", epicTask1.getTaskId());
         manager.addSubtask(subtask1);
-        ArrayList<Task> allTasks = new ArrayList<>();
-        allTasks.addAll(manager.getAllTasks());
-        for (Task epicTask : manager.getAllEpicTasks()) {
-            allTasks.add(epicTask);
-            allTasks.addAll(manager.getEpicSubtasks(epicTask.getTaskId()));
-        }
-        allTasks.addAll(manager.getAllSubtasks());
+        ArrayList<Task> allTasks = new ArrayList<>(manager.getAllSubtasks());
         assertEquals(allTasks, manager.getHistory(), "История просмотров работает некорректно");
     }
 

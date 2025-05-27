@@ -92,20 +92,23 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTaskById(Task task) {
         tasks.remove(task.getTaskId());
+        inMemoryHistoryManager.remove(task.getTaskId());
     }
 
     @Override
     public void deleteEpicTaskById(EpicTask epicTask) {
-        for (Subtask subtask : subtasks.values()) {
-            if (epicTask.getTaskId() == subtask.getEpicId()) {
-                subtasks.remove(subtask.getTaskId());
-                }
-            }
+        inMemoryHistoryManager.remove(epicTask.getTaskId());
+        for (Subtask subtask : epicTask.getSubtasks()) {
+            subtasks.remove(subtask.getTaskId());
+        }
         epicTasks.remove(epicTask.getTaskId());
     }
 
     @Override
     public void deleteSubtaskById(Subtask subtask) {
+        if (inMemoryHistoryManager.getHistory().contains(subtask)) {
+            inMemoryHistoryManager.remove(subtask.getTaskId());
+        }
         epicTasks.get(subtask.getEpicId()).removeSubtask(subtask);
         subtasks.remove(subtask.getTaskId());
         updateEpicTaskStatus(epicTasks.get(subtask.getEpicId()));
@@ -155,17 +158,26 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllTasks() {
+        for (Task task : tasks.values()) {
+            inMemoryHistoryManager.remove(task.getTaskId());
+        }
         tasks.clear();
     }
 
     @Override
     public void deleteAllEpicTasks() {
+        for (Task epictask : epicTasks.values()) {
+            inMemoryHistoryManager.remove(epictask.getTaskId());
+        }
         epicTasks.clear();
         subtasks.clear();
     }
 
     @Override
     public void deleteAllSubtasks() {
+        for (Task subtask : subtasks.values()) {
+            inMemoryHistoryManager.remove(subtask.getTaskId());
+        }
         for (EpicTask epicTask : epicTasks.values()) {
             epicTask.getSubtasks().clear();
             updateEpicTaskStatus(epicTask);
@@ -238,7 +250,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public ArrayList<Task> getHistory() {
-        return inMemoryHistoryManager.getHistory();
+        return (ArrayList<Task>) inMemoryHistoryManager.getHistory();
     }
 
 }
