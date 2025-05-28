@@ -1,4 +1,4 @@
-package Tasks1;
+package tasks;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

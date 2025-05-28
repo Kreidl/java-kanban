@@ -1,4 +1,4 @@
-package Tasks1;
+package tasks;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ class EpicTaskTest {
     @BeforeEach
     void createNewEpicTask() {
         epicTask = new EpicTask("Эпик 1", "Описание эпика 1");
-        Subtask subtask = new Subtask("Подзадача 1.1", "Описание подзадачи 1.1",TaskStatus.NEW, epicTask.getTaskId());
+        Subtask subtask = new Subtask("Подзадача 1.1", "Описание подзадачи 1.1", TaskStatus.NEW, epicTask.getTaskId());
         Subtask subtask1 = new Subtask("Подзадача 1.2", "Описание подзадачи 1.2",TaskStatus.NEW, epicTask.getTaskId());
         epicTask.getSubtasks().add(subtask);
         epicTask.getSubtasks().add(subtask1);
