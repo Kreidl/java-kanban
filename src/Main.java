@@ -1,8 +1,8 @@
-import manager.InMemoryTaskManager;
-import tasks.EpicTask;
-import tasks.Subtask;
-import tasks.Task;
-import tasks.TaskStatus;
+import Manager1.InMemoryTaskManager;
+import Tasks1.EpicTask;
+import Tasks1.Subtask;
+import Tasks1.Task;
+import Tasks1.TaskStatus;
 
 public class Main {
 
@@ -168,8 +168,6 @@ public class Main {
         System.out.println("\nУдалили эпик 1. История:");
         System.out.println("\n" + inMemoryTaskManager.getHistory());
     }
-
-
 
     private static void printAllTasks(InMemoryTaskManager manager) {
         System.out.println("Задачи:");

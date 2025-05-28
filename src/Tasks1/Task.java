@@ -1,4 +1,4 @@
-package tasks;
+package Tasks1;
 
 import java.util.Objects;
 
@@ -9,13 +9,13 @@ public class Task {
     private int taskId;
     private TaskStatus taskStatus;
 
-    public Task (String name, String description, int taskId) {
+    public Task(String name, String description, int taskId) {
         this.name = name;
         this.description = description;
         this.taskId = taskId;
     }
 
-    public Task (String name, String description, TaskStatus taskStatus) {
+    public Task(String name, String description, TaskStatus taskStatus) {
         this.name = name;
         this.description = description;
         this.taskStatus = taskStatus;

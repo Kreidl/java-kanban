@@ -1,4 +1,4 @@
-package manager;
+package Manager1;
 
 import org.junit.jupiter.api.Test;
 
