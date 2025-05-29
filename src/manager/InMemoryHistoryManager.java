@@ -33,60 +33,39 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        ArrayList<Task> tasks = new ArrayList<>();
-        for (Node node : nodesOfTasks.values()) {
-            if (node.getElement() instanceof Subtask) {
-                if (((Subtask) node.getElement()).getEpicId() == id) {
-                    tasks.add(node.getElement());
-                }
-            }
-        }
-        for (Task task : tasks) {
-            removeNode(nodesOfTasks.get(task.getTaskId()));
-        }
         if (nodesOfTasks.containsKey(id)) {
             removeNode(nodesOfTasks.get(id));
         }
     }
 
-    public void linkLast(Task task) {
-        if (nodesOfTasks.isEmpty()) {
-            Node newNode = new Node(null, task, null);
-            nodesOfTasks.put(task.getTaskId(), newNode);
-            head = newNode;
-            tail = newNode;
-        } else if (nodesOfTasks.containsKey(task.getTaskId())) {
-            removeNode(nodesOfTasks.get(task.getTaskId()));
-            Node newNode = new Node(tail, task, null);
-            nodesOfTasks.put(task.getTaskId(), newNode);
-            this.tail = newNode;
-        } else {
-            Node newNode = new Node(tail, task, null);
-            nodesOfTasks.put(task.getTaskId(), newNode);
-            tail.setNext(newNode);
-            this.tail = newNode;
+    private void linkLast(Task task) {
+        final Node node = new Node(tail, task, null);
+        if (head == null) { //Список пустой-в начало
+            head = node;
+        } else {  //Список не пустой-прикрепляем в конец
+            tail.setNext(node);
         }
+        tail = node;
+        nodesOfTasks.put(task.getTaskId(), node);
     }
 
-    public void removeNode(Node node) {
-        if (node == head && node == tail) {
-            nodesOfTasks.clear();
-        } else if (node == head) {
-            node.getNext().setPrev(null);
-            head = node.getNext();
-            nodesOfTasks.remove(node.getElement().getTaskId());
+    private void removeNode(Node node) {
+        if (node == head) {
+            if (node != tail) {
+                node.getNext().setPrev(null);
+                head = node.getNext();
+            }
         } else if (node == tail) {
             node.getPrev().setNext(null);
             tail = node.getPrev();
-            nodesOfTasks.remove(node.getElement().getTaskId());
         } else {
             node.getNext().setPrev(node.getPrev());
             node.getPrev().setNext(node.getNext());
-            nodesOfTasks.remove(node.getElement().getTaskId());
         }
+        nodesOfTasks.remove(node.getElement().getTaskId());
     }
 
-    public List<Task> getTasks() {
+    private List<Task> getTasks() {
         List<Task> tasksList = new ArrayList<>();
         Node node = head;
         while (node != null) {

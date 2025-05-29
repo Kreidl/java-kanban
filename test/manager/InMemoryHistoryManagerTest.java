@@ -122,19 +122,6 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void removeEpicTaskWithSubtasks() {
-        inMemoryHistoryManager.add(task1);
-        inMemoryHistoryManager.add(task2);
-        task3.setEpicId(task2.getTaskId());
-        inMemoryHistoryManager.add(task3);
-        ArrayList<Task> tasks = new ArrayList<>();
-        tasks.add(task1);
-        inMemoryHistoryManager.remove(task2.getTaskId());
-        assertNull(inMemoryHistoryManager.getHead().getNext(), "Осталась связь с удалённой задачей");
-        assertEquals(tasks, inMemoryHistoryManager.getHistory(), "История просмотров не соответствует ожидаемой");
-    }
-
-    @Test
     void removeNodeFromBeginning() {
         inMemoryHistoryManager.add(task1);
         inMemoryHistoryManager.add(task2);

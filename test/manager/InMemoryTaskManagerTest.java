@@ -289,6 +289,23 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
+    void getHistoryAfterRemovingEpicTaskWithSubtasks() {
+        Task task1 = new Task("Задача 1","Описание задачи 1");
+        EpicTask epicTask1 = new EpicTask("Эпик 1","Описание эпика 1");
+        manager.addTask(task1);
+        manager.addEpicTask(epicTask1);
+        Subtask subtask1 = new Subtask("Подзадача 1.1","Описание подзадачи 1.1", TaskStatus.NEW, epicTask1.getTaskId());
+        manager.addSubtask(subtask1);
+        manager.getAllTasks();
+        manager.getAllEpicTasks();
+        manager.getAllSubtasks();
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(task1);
+        manager.deleteEpicTaskById(epicTask1);
+        assertEquals(tasks, manager.getHistory(), "История просмотров не соответствует ожидаемой");
+    }
+
+    @Test
     void twoTasksWithSameIdAreEquals() {
         Task task1 = new Task("Задача 1","Описание задачи 1");
         manager.addTask(task1);
