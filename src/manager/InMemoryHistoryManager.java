@@ -1,6 +1,5 @@
 package manager;
 
-import tasks.Subtask;
 import tasks.Task;
 
 import java.util.ArrayList;
