@@ -1,8 +1,8 @@
-import Manager.InMemoryTaskManager;
-import Tasks.EpicTask;
-import Tasks.Subtask;
-import Tasks.Task;
-import Tasks.TaskStatus;
+import manager.InMemoryTaskManager;
+import tasks.EpicTask;
+import tasks.Subtask;
+import tasks.Task;
+import tasks.TaskStatus;
 
 public class Main {
 
@@ -111,21 +111,63 @@ public class Main {
 
         //Удаление всех задач
         inMemoryTaskManager.deleteAllTasks();
-        System.out.println("\nСписок обычных задач (после удаления всех задач:");
+        System.out.println("\nСписок обычных задач (после удаления всех задач):");
         System.out.println(inMemoryTaskManager.getAllTasks().toString());
 
         //Удаление всех эпиков
         inMemoryTaskManager.deleteAllEpicTasks();
-        System.out.println("\nСписок эпиков (после удаления всех эпиков:");
+        System.out.println("\nСписок эпиков (после удаления всех эпиков):");
         System.out.println(inMemoryTaskManager.getAllEpicTasks().toString());
 
         //Удаление всех задач
         inMemoryTaskManager.deleteAllSubtasks();
-        System.out.println("\nСписок подзадач (после удаления всех подзадач:");
+        System.out.println("\nСписок подзадач (после удаления всех подзадач):");
         System.out.println(inMemoryTaskManager.getAllSubtasks().toString());
+
+        //Добавление задач в историю просмотров
+        task2 = new Task("Задача 2", "Описание задачи 2");
+        epicTask2 = new EpicTask("Эпик 2", "Описание эпика 2");
+        inMemoryTaskManager.addTask(task1);
+        inMemoryTaskManager.addTask(task2);
+        inMemoryTaskManager.addEpicTask(epicTask1);
+        inMemoryTaskManager.addEpicTask(epicTask2);
+        subtask1 = new Subtask("Подзадача 1.1", "Описание подзадачи 1.1", TaskStatus.IN_PROGRESS, epicTask1.getTaskId());
+        subtask2 = new Subtask("Подзадача 1.2", "Описание подзадачи 1.2", TaskStatus.IN_PROGRESS, epicTask1.getTaskId());
+        subtask3 = new Subtask("Подзадача 1.3", "Описание подзадачи 1.3", TaskStatus.IN_PROGRESS, epicTask1.getTaskId());
+        inMemoryTaskManager.addSubtask(subtask1);
+        inMemoryTaskManager.addSubtask(subtask2);
+        inMemoryTaskManager.addSubtask(subtask3);
+        System.out.println("\nВызываем задачи в разном порядке:");
+        System.out.println("\n" + inMemoryTaskManager.getTaskById(task2.getTaskId()));
+        System.out.println("\n" + inMemoryTaskManager.getHistory());
+        System.out.println("\n" + inMemoryTaskManager.getSubtaskById(subtask3.getTaskId()));
+        System.out.println("\n" + inMemoryTaskManager.getHistory());
+        System.out.println("\n" + inMemoryTaskManager.getAllSubtasks());
+        System.out.println("\n" + inMemoryTaskManager.getHistory());
+        System.out.println("\n" + inMemoryTaskManager.getEpicTaskById(epicTask2.getTaskId()));
+        System.out.println("\n" + inMemoryTaskManager.getHistory());
+
+        //Удаление задачи, которая есть в истории
+        System.out.println("\nТекущая история:");
+        System.out.println("\n" + inMemoryTaskManager.getHistory());
+        inMemoryTaskManager.deleteTaskById(task2);
+        System.out.println("\nУдалили задачу 2. История:");
+        System.out.println("\n" + inMemoryTaskManager.getHistory());
+
+        //Удаление подзадачи у эпика
+        System.out.println("\nТекущая история:");
+        System.out.println("\n" + inMemoryTaskManager.getHistory());
+        inMemoryTaskManager.deleteSubtaskById(subtask1);
+        System.out.println("\nУдалили подзадачу 1. История:");
+        System.out.println("\n" + inMemoryTaskManager.getHistory());
+
+        //Удаление эпика с подзадачами
+        System.out.println("\nТекущая история:");
+        System.out.println("\n" + inMemoryTaskManager.getHistory());
+        inMemoryTaskManager.deleteEpicTaskById(epicTask1);
+        System.out.println("\nУдалили эпик 1. История:");
+        System.out.println("\n" + inMemoryTaskManager.getHistory());
     }
-
-
 
     private static void printAllTasks(InMemoryTaskManager manager) {
         System.out.println("Задачи:");
@@ -135,7 +177,6 @@ public class Main {
         System.out.println("Эпики:");
         for (Task epic : manager.getAllEpicTasks()) {
             System.out.println(epic);
-
             for (Task task : manager.getEpicSubtasks(epic.getTaskId())) {
                 System.out.println("--> " + task);
             }
@@ -144,11 +185,11 @@ public class Main {
         for (Task subtask : manager.getAllSubtasks()) {
             System.out.println(subtask);
         }
-
         System.out.println("История:");
         for (Task task : manager.getHistory()) {
             System.out.println(task);
         }
     }
 }
+
 
