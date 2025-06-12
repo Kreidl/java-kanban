@@ -175,7 +175,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return null;
     }
 
-    private TaskType getTaskType (Task task) {
+    private TaskType getTaskType(Task task) {
         if (task instanceof EpicTask) {
             return TaskType.EPIC;
         } else if (task instanceof Subtask) {
@@ -187,35 +187,37 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public File getFile() {
         return fileBacked;
     }
-}
 
-class Main {
-    public static void main(String[] args) {
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager();
-        Task task1 = new Task("Задача 1", "Описание задачи 1");
-        fileBackedTaskManager.addTask(task1);
-        EpicTask epicTask1 = new EpicTask("Эпик 1", "Описание эпика 1");
-        fileBackedTaskManager.addEpicTask(epicTask1);
-        Subtask subtask1 = new Subtask("Подзадача 1.1", "Описание подзадачи 1.1", epicTask1.getTaskId());
-        fileBackedTaskManager.addSubtask(subtask1);
-        EpicTask epicTask2 = new EpicTask("Эпик 2", "Описание эпика 2");
-        fileBackedTaskManager.addEpicTask(epicTask2);
-        Subtask subtask2 = new Subtask("Подзадача 1.2", "Описание подзадачи 1.2", epicTask1.getTaskId());
-        fileBackedTaskManager.addSubtask(subtask2);
-        Task task2 = new Task("Задача 2", "Описание задачи 2");
-        fileBackedTaskManager.addTask(task2);
-        Subtask subtask3 = new Subtask("Подзадача 2.1", "Описание подзадачи 2.1", epicTask2.getTaskId());
-        fileBackedTaskManager.addSubtask(subtask3);
-        FileBackedTaskManager fileBackedTaskManager1 = new FileBackedTaskManager(fileBackedTaskManager.getFile());
-        try (BufferedReader br = new BufferedReader(new FileReader(fileBackedTaskManager1.getFile()))) {
-            System.out.println("Проверяем наличие 7 добавленных в первый менеджер задач:\n");
-            while (br.ready()) {
-                System.out.println(br.readLine());
+    static class Main {
+        public static void main(String[] args) {
+            FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager();
+            Task task1 = new Task("Задача 1", "Описание задачи 1");
+            fileBackedTaskManager.addTask(task1);
+            EpicTask epicTask1 = new EpicTask("Эпик 1", "Описание эпика 1");
+            fileBackedTaskManager.addEpicTask(epicTask1);
+            Subtask subtask1 = new Subtask("Подзадача 1.1", "Описание подзадачи 1.1", epicTask1.getTaskId());
+            fileBackedTaskManager.addSubtask(subtask1);
+            EpicTask epicTask2 = new EpicTask("Эпик 2", "Описание эпика 2");
+            fileBackedTaskManager.addEpicTask(epicTask2);
+            Subtask subtask2 = new Subtask("Подзадача 1.2", "Описание подзадачи 1.2", epicTask1.getTaskId());
+            fileBackedTaskManager.addSubtask(subtask2);
+            Task task2 = new Task("Задача 2", "Описание задачи 2");
+            fileBackedTaskManager.addTask(task2);
+            Subtask subtask3 = new Subtask("Подзадача 2.1", "Описание подзадачи 2.1", epicTask2.getTaskId());
+            fileBackedTaskManager.addSubtask(subtask3);
+            FileBackedTaskManager fileBackedTaskManager1 = new FileBackedTaskManager(fileBackedTaskManager.getFile());
+            try (BufferedReader br = new BufferedReader(new FileReader(fileBackedTaskManager1.getFile()))) {
+                System.out.println("Проверяем наличие 7 добавленных в первый менеджер задач:\n");
+                while (br.ready()) {
+                    System.out.println(br.readLine());
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 }
+
+
 
 
