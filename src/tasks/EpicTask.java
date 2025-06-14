@@ -1,5 +1,7 @@
 package tasks;
 
+import manager.TaskType;
+
 import java.util.ArrayList;
 
 public class EpicTask extends Task {
@@ -16,5 +18,10 @@ public class EpicTask extends Task {
 
     public void removeSubtask(Subtask subtask) {
         subtasks.remove(subtask);
+    }
+
+    @Override
+    public TaskType getType() {
+        return TaskType.EPIC;
     }
 }

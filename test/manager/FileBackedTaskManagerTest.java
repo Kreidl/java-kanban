@@ -375,8 +375,7 @@ class FileBackedTaskManagerTest {
         String expectedTask = "\uFEFF" + "id,type,name,status,description,epic" + fileBackedTaskManager.toString(task1)
                 + fileBackedTaskManager.toString(epicTask1) + fileBackedTaskManager.toString(subtask1) +
                 fileBackedTaskManager.toString(epicTask2) + fileBackedTaskManager.toString(subtask2);
-        FileBackedTaskManager fileBackedTaskManager1 = new FileBackedTaskManager();
-          fileBackedTaskManager1 = fileBackedTaskManager1.loadFromFile(fileBackedTaskManager.getFile());
+        FileBackedTaskManager fileBackedTaskManager1 = FileBackedTaskManager.loadFromFile(fileBackedTaskManager.getFile());
         try (FileReader fr = new FileReader(fileBackedTaskManager1.getFile(), StandardCharsets.UTF_8); BufferedReader br = new BufferedReader(fr)) {
             String actualTask = "";
             while (br.ready()) {
@@ -401,7 +400,7 @@ class FileBackedTaskManagerTest {
     }
 
         @Test
-        void testToString () {
+        void testToString() {
             fileBackedTaskManager.addTask(exampleTask);
             String expected = String.format("%s,%s,%s,%s,%s,", exampleTask.getTaskId(), "TASK",
                     exampleTask.getName(), exampleTask.getDescription(), exampleTask.getTaskStatus());
@@ -410,9 +409,16 @@ class FileBackedTaskManagerTest {
         }
 
         @Test
-        void fromString () {
+        void fromString() {
             String taskInfo = "1,TASK,Задача 1,Описание задачи 1,NEW";
             fileBackedTaskManager.addTask(FileBackedTaskManager.fromString(taskInfo));
             assertEquals(exampleTask.getClass(), fileBackedTaskManager.getTaskById(1).getClass(), "Задачи не совпадают");
+        }
+
+        @Test
+        void creatingFileOnDirectoryResources() {
+            FileBackedTaskManager fileBackedTaskManager1 = new FileBackedTaskManager();
+            File dir = new File(fileBackedTaskManager1.getFile().getParentFile().toURI());
+            assertEquals("resources", dir.getName());
         }
     }
