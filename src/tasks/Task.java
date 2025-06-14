@@ -1,5 +1,7 @@
 package tasks;
 
+import manager.TaskType;
+
 import java.util.Objects;
 
 public class Task {
@@ -64,6 +66,10 @@ public class Task {
 
     public void setTaskId(int taskId) {
         this.taskId = taskId;
+    }
+
+    public TaskType getType() {
+        return TaskType.TASK;
     }
 
     @Override
