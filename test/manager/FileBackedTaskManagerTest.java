@@ -11,6 +11,8 @@ import tasks.TaskStatus;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -402,17 +404,42 @@ class FileBackedTaskManagerTest {
         @Test
         void testToString() {
             fileBackedTaskManager.addTask(exampleTask);
-            String expected = String.format("%s,%s,%s,%s,%s,", exampleTask.getTaskId(), "TASK",
+            String expected = String.format("%s,%s,%s,%s,%s,,,,", exampleTask.getTaskId(), "TASK",
                     exampleTask.getName(), exampleTask.getDescription(), exampleTask.getTaskStatus());
             String actual = fileBackedTaskManager.toString(exampleTask);
             assertEquals(expected, actual, "Строки из задач не совпадают");
         }
 
         @Test
-        void fromString() {
-            String taskInfo = "1,TASK,Задача 1,Описание задачи 1,NEW";
+        void testFromString() {
+            String taskInfo = "1,TASK,Задача 1,Описание задачи 1,NEW,,,,";
             fileBackedTaskManager.addTask(FileBackedTaskManager.fromString(taskInfo));
             assertEquals(exampleTask.getClass(), fileBackedTaskManager.getTaskById(1).getClass(), "Задачи не совпадают");
+        }
+
+        @Test
+        void testTaskWithTimesToString() {
+            Task task1 = new Task("Задача 1","Описание задачи 1");
+            fileBackedTaskManager.addTask(task1);
+            LocalDateTime startTime = LocalDateTime.of(2025, 6, 5, 12, 0);
+            Duration duration = Duration.ofMinutes(15);
+            task1.setStartTime(startTime);
+            task1.setDuration(duration);
+            task1.setEndTime();
+            String expected = String.format("%s,%s,%s,%s,%s,05.06.2025 12:00,05.06.2025 12:15,15,", task1.getTaskId(), "TASK",
+                    task1.getName(), task1.getDescription(), task1.getTaskStatus());
+            String actual = fileBackedTaskManager.toString(task1);
+            assertEquals(expected, actual, "Строки из задач не совпадают");
+        }
+
+        @Test
+        void testTaskWithTimesFromString() {
+            String taskInfo = "1,TASK,Задача 1,Описание задачи 1,NEW,05.06.2025 12:00,05.06.2025 12:15,15,";
+            fileBackedTaskManager.addTask(FileBackedTaskManager.fromString(taskInfo));
+            assertEquals(exampleTask.getClass(), fileBackedTaskManager.getTaskById(1).getClass(), "Задачи не совпадают");
+            assertEquals("2025-06-05T12:00", fileBackedTaskManager.getTaskById(1).getStartTime().toString());
+            assertEquals("2025-06-05T12:15", fileBackedTaskManager.getTaskById(1).getEndTime().toString());
+            assertEquals("PT15M", fileBackedTaskManager.getTaskById(1).getDuration().toString());
         }
 
         @Test
