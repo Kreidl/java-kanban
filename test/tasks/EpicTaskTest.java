@@ -42,7 +42,7 @@ class EpicTaskTest {
     }
 
     @Test
-    public void setDuration() {
+    public void setDurationTest() {
         LocalDateTime startTime1 = LocalDateTime.of(2025, 6, 5, 12, 0);
         LocalDateTime startTime2 = LocalDateTime.of(2025, 6, 6, 12, 0);
         Duration duration1 = Duration.ofMinutes(15L);
@@ -52,12 +52,14 @@ class EpicTaskTest {
         epicTask.getSubtasks().get(1).setStartTime(startTime2);
         epicTask.getSubtasks().get(0).setDuration(duration1);
         epicTask.getSubtasks().get(1).setDuration(duration2);
+        epicTask.getSubtasks().get(0).setEndTime();
+        epicTask.getSubtasks().get(1).setEndTime();
         epicTask.setDuration();
         assertEquals(duration3.toString(), epicTask.getDuration().toString(), "Продолжительность выполнения эпика добавляется некорректно");
     }
 
     @Test
-    public void setStartTime() {
+    public void setStartTimeTest() {
         LocalDateTime startTime = LocalDateTime.of(2025, 5, 6, 14, 0);
         epicTask.getSubtasks().get(0).setStartTime(startTime);
         epicTask.setStartTime();
@@ -65,7 +67,7 @@ class EpicTaskTest {
     }
 
     @Test
-    public void setEndTime() {
+    public void setEndTimeTest() {
         LocalDateTime startTime1 = LocalDateTime.of(2025, 6, 5, 12, 0);
         LocalDateTime startTime2 = LocalDateTime.of(2025, 6, 6, 12, 0);
         Duration duration1 = Duration.ofMinutes(15L);
@@ -74,6 +76,8 @@ class EpicTaskTest {
         epicTask.getSubtasks().get(1).setStartTime(startTime2);
         epicTask.getSubtasks().get(0).setDuration(duration1);
         epicTask.getSubtasks().get(1).setDuration(duration2);
+        epicTask.getSubtasks().get(0).setEndTime();
+        epicTask.getSubtasks().get(1).setEndTime();
         epicTask.setEndTime();
         LocalDateTime endTime = epicTask.getSubtasks().get(1).getEndTime();
         assertEquals(endTime.toString(), epicTask.getEndTime().toString(), "Дата окончания выполнения эпика добавляется некорректно");

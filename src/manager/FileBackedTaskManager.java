@@ -180,7 +180,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 setStartEndTimesAndDuration(epicTask, taskInfo[5], taskInfo[6], taskInfo[7]);
                 return epicTask;
             case "SUBTASK":
-                Task subtask = new Subtask(taskInfo[2], taskInfo[3], Integer.parseInt(taskInfo[5]));
+                Task subtask = new Subtask(taskInfo[2], taskInfo[3], Integer.parseInt(taskInfo[8]));
                 subtask.setTaskStatus(TaskStatus.valueOf(taskInfo[4]));
                 setStartEndTimesAndDuration(subtask, taskInfo[5], taskInfo[6], taskInfo[7]);
                 return subtask;

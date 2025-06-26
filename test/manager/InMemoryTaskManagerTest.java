@@ -1,5 +1,7 @@
 package manager;
 
+import exceptions.TaskIntersectWithOther;
+import org.junit.jupiter.api.Assertions;
 import tasks.EpicTask;
 import tasks.Subtask;
 import tasks.Task;
@@ -8,7 +10,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -393,5 +398,88 @@ class InMemoryTaskManagerTest {
         subtask3 = new Subtask("Подзадача 1.1","Описание подзадачи 1.1", TaskStatus.NEW, epicTask1.getTaskId());
         manager.updateSubtask(subtask1, subtask3);
         assertEquals(TaskStatus.NEW, epicTask1.getTaskStatus(), "Статус эпика не совпадает");
+    }
+
+    @Test
+    void addPrioritizedTaskWithTimeTest() {
+        Task task1 = new Task("Задача 1","Описание задачи 1");
+        task1.setStartTime(LocalDateTime.of(2025, 5, 6, 14, 0));
+        task1.setDuration(Duration.ofMinutes(15));
+        manager.addTask(task1);
+        TreeSet<Task> testTasks = new TreeSet<>((t1, t2) -> {
+            if (t1.getStartTime().isBefore(t2.getStartTime())) {
+                return 1;
+            } else if (t1.getStartTime().isAfter(t2.getStartTime())) {
+                return -1;
+            }
+            return 0;
+        });;
+        testTasks.add(task1);
+        assertEquals(testTasks ,manager.getPrioritizedTasks(), "Задача добавлена в список приоритета некорректно");
+    }
+
+    @Test
+    void addPrioritizedSubtaskWithTimeTest() {
+        EpicTask epicTask1 = new EpicTask("Эпик 1","Описание эпика 1");
+        manager.addEpicTask(epicTask1);
+        Subtask subtask1 = new Subtask("Подзадача 1.1","Описание подзадачи 1.1", epicTask1.getTaskId());
+        subtask1.setStartTime(LocalDateTime.of(2025, 5, 6, 14, 0));
+        subtask1.setDuration(Duration.ofMinutes(15));
+        manager.addSubtask(subtask1);
+        TreeSet<Task> testTasks = new TreeSet<>((t1, t2) -> {
+            if (t1.getStartTime().isBefore(t2.getStartTime())) {
+                return 1;
+            } else if (t1.getStartTime().isAfter(t2.getStartTime())) {
+                return -1;
+            }
+            return 0;
+        });;
+        testTasks.add(subtask1);
+        assertEquals(testTasks ,manager.getPrioritizedTasks(), "Подзадача добавлена в список приоритета некорректно");
+    }
+
+    @Test
+    void exceptionAddPrioritizedTasksWithIntersectTimeTest() {
+        TaskIntersectWithOther exception = Assertions.assertThrows(TaskIntersectWithOther.class, () -> {
+            Task task1 = new Task("Задача 1", "Описание задачи 1");
+            task1.setStartTime(LocalDateTime.of(2025, 5, 6, 14, 0));
+            task1.setDuration(Duration.ofMinutes(15));
+            manager.addTask(task1);
+            EpicTask epicTask1 = new EpicTask("Эпик 1", "Описание эпика 1");
+            manager.addEpicTask(epicTask1);
+            Subtask subtask1 = new Subtask("Подзадача 1.1", "Описание подзадачи 1.1", epicTask1.getTaskId());
+            subtask1.setStartTime(LocalDateTime.of(2025, 5, 6, 14, 10));
+            subtask1.setDuration(Duration.ofMinutes(15));
+            manager.addSubtask(subtask1);
+        });
+        assertEquals("Задача пересекается с другой" ,exception.getMessage(), "Пересекающиеся задачи работают некорректно");
+    }
+
+    @Test
+    void updatePrioritizedTaskWithTimeTest() {
+    }
+
+    @Test
+    void updatePrioritizedSubtaskWithTimeTest() {
+    }
+
+    @Test
+    void deletePrioritizedTaskWithTimeTest() {
+    }
+
+    @Test
+    void deletePrioritizedSubtaskWithTimeTest() {
+    }
+
+    @Test
+    void deletePrioritizedSubtaskWithTimeAfterDeletingItsEpicTest() {
+    }
+
+    @Test
+    void deletePrioritizedTasksWithTimeAfterDeletingAllTasksTest() {
+    }
+
+    @Test
+    void deletePrioritizedSubtasksWithTimeAfterDeletingAllSubtasksTest() {
     }
 }
