@@ -96,18 +96,26 @@ public class InMemoryTaskManager implements TaskManager {
             if (prioritizedTasks.contains(thisTask)) {
                 prioritizedTasks.remove(thisTask);
             }
-            thisTask.setName(updatedTask.getName());
-            thisTask.setDescription(updatedTask.getDescription());
-            thisTask.setTaskStatus(updatedTask.getTaskStatus());
             if (updatedTask.getStartTime() != null) {
-                thisTask.setStartTime(updatedTask.getStartTime());
-                thisTask.setDuration(updatedTask.getDuration());
-                thisTask.setEndTime();
+                if (!isTaskIntersectWithOthers(updatedTask)) {
+                    thisTask.setName(updatedTask.getName());
+                    thisTask.setDescription(updatedTask.getDescription());
+                    thisTask.setTaskStatus(updatedTask.getTaskStatus());
+                    thisTask.setStartTime(updatedTask.getStartTime());
+                    thisTask.setDuration(updatedTask.getDuration());
+                    thisTask.setEndTime();
+                    tasks.put(thisTask.getTaskId(), thisTask);
+                }
                 prioritizedTasks.add(thisTask);
+            } else {
+                thisTask.setName(updatedTask.getName());
+                thisTask.setDescription(updatedTask.getDescription());
+                thisTask.setTaskStatus(updatedTask.getTaskStatus());
+                tasks.put(thisTask.getTaskId(), thisTask);
             }
-            tasks.put(thisTask.getTaskId(), thisTask);
         }
     }
+
 
     @Override
     public void updateEpicTask(EpicTask thisEpicTask, EpicTask updatedEpicTask) {
@@ -125,18 +133,27 @@ public class InMemoryTaskManager implements TaskManager {
             if (prioritizedTasks.contains(thisSubtask)) {
                 prioritizedTasks.remove(thisSubtask);
             }
-            thisSubtask.setName(updatedSubtask.getName());
-            thisSubtask.setDescription(updatedSubtask.getDescription());
-            thisSubtask.setTaskStatus(updatedSubtask.getTaskStatus());
             if (updatedSubtask.getStartTime() != null) {
-                thisSubtask.setStartTime(updatedSubtask.getStartTime());
-                thisSubtask.setDuration(updatedSubtask.getDuration());
-                thisSubtask.setEndTime();
+                if (!isTaskIntersectWithOthers(updatedSubtask)) {
+                    thisSubtask.setName(updatedSubtask.getName());
+                    thisSubtask.setDescription(updatedSubtask.getDescription());
+                    thisSubtask.setTaskStatus(updatedSubtask.getTaskStatus());
+                    thisSubtask.setStartTime(updatedSubtask.getStartTime());
+                    thisSubtask.setDuration(updatedSubtask.getDuration());
+                    thisSubtask.setEndTime();
+                    subtasks.put(thisSubtask.getTaskId(), thisSubtask);
+                    int indexSubtask = epicTasks.get(thisSubtask.getEpicId()).getSubtasks().indexOf(thisSubtask);
+                    epicTasks.get(thisSubtask.getEpicId()).getSubtasks().set(indexSubtask, thisSubtask);
+                }
                 prioritizedTasks.add(thisSubtask);
+            } else {
+                thisSubtask.setName(updatedSubtask.getName());
+                thisSubtask.setDescription(updatedSubtask.getDescription());
+                thisSubtask.setTaskStatus(updatedSubtask.getTaskStatus());
+                subtasks.put(thisSubtask.getTaskId(), thisSubtask);
+                int indexSubtask = epicTasks.get(thisSubtask.getEpicId()).getSubtasks().indexOf(thisSubtask);
+                epicTasks.get(thisSubtask.getEpicId()).getSubtasks().set(indexSubtask, thisSubtask);
             }
-            subtasks.put(thisSubtask.getTaskId(), thisSubtask);
-            int indexSubtask = epicTasks.get(thisSubtask.getEpicId()).getSubtasks().indexOf(thisSubtask);
-            epicTasks.get(thisSubtask.getEpicId()).getSubtasks().set(indexSubtask, thisSubtask);
             updateEpicTaskStatus(epicTasks.get(thisSubtask.getEpicId()));
         }
     }

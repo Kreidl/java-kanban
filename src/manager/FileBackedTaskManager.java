@@ -140,9 +140,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     }
                 }
             }
-        } catch (IOException e) {
-            throw new ManagerSaveException("Не получилось прочитать файл.");
-        }
+        } catch (NullPointerException exc) {
+            throw new ManagerSaveException("Файл пустой.");
+        } catch (SecurityException exc) {
+            throw new ManagerSaveException("Недостаточно прав доступа.");
+        } catch (Exception e) {
+                throw new ManagerSaveException("Не получилось прочитать файл.");
+            }
         return fileBackedTaskManager;
     }
 

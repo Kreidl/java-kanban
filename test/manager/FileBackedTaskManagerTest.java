@@ -1,7 +1,6 @@
 package manager;
 
 import exceptions.ManagerSaveException;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.EpicTask;
@@ -11,36 +10,29 @@ import tasks.TaskStatus;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTaskManagerTest {
+class FileBackedTaskManagerTest extends TaskManagerTest {
     static FileBackedTaskManager fileBackedTaskManager;
-    static Task exampleTask;
-    static EpicTask exampleEpicTask;
-    static Subtask exampleSubtask;
-
-    @BeforeAll
-    static void createExamplesOfTasks() {
-        exampleTask = new Task("Задача 100","Описание задачи 100");
-        exampleEpicTask = new EpicTask("Эпик 100", "Описание эпика 100");
-        exampleSubtask = new Subtask("Подзадача 100.1","Описание подзадачи 100.1", 2);
-    }
 
     @BeforeEach
-    void createNewFileBackedTaskManager() {
+    @Override
+    public void createNewTaskManager() {
         try {
             File file = File.createTempFile("test", ".csv");
             fileBackedTaskManager = new FileBackedTaskManager(file);
+            super.taskManager = fileBackedTaskManager;
         } catch (IOException e) {
             throw new ManagerSaveException("Не получилось создать файл.");
         }
     }
 
     @Test
-    void addTask() {
+    void addTaskTest() {
         fileBackedTaskManager.addTask(exampleTask);
         String expectedTask = "\uFEFF" + "id,type,name,status,description,epic" +
                 fileBackedTaskManager.toString(exampleTask);
@@ -58,7 +50,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void addEpicTask() {
+    void addEpicTaskTest() {
         fileBackedTaskManager.addEpicTask(exampleEpicTask);
         String expectedTask = "\uFEFF" + "id,type,name,status,description,epic" +
                 fileBackedTaskManager.toString(exampleEpicTask);
@@ -76,7 +68,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void addSubtask() {
+    void addSubtaskTest() {
         EpicTask epicTask1 = new EpicTask("Эпик 1","Описание эпика 1");
         fileBackedTaskManager.addEpicTask(epicTask1);
         Subtask subtask1 = new Subtask("Подзадача 1.1","Описание подзадачи 1.1", epicTask1.getTaskId());
@@ -97,7 +89,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void updateTask() {
+    void updateTaskTest() {
         Task task1 = new Task("Задача 1","Описание задачи 1");
         fileBackedTaskManager.addTask(task1);
         Task task2 = new Task("Обновлённое название задачи 1", "Обновлённое описание задачи 1", TaskStatus.IN_PROGRESS);
@@ -117,7 +109,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void updateEpicTask() {
+    void updateEpicTaskTest() {
         EpicTask epicTask1 = new EpicTask("Эпик 1","Описание эпика 1");
         fileBackedTaskManager.addEpicTask(epicTask1);
         EpicTask epicTask2 = new EpicTask("Название обновлённого эпика 1","Описание обновлённого эпика 1");
@@ -138,7 +130,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void updateSubtask() {
+    void updateSubtaskTest() {
         EpicTask epicTask1 = new EpicTask("Эпик 1","Описание эпика 1");
         fileBackedTaskManager.addEpicTask(epicTask1);
         Subtask subtask1 = new Subtask("Подзадача 1.1","Описание подзадачи 1.1", epicTask1.getTaskId());
@@ -161,7 +153,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void deleteTaskById() {
+    void deleteTaskByIdTest() {
         Task task1 = new Task("Задача 1","Описание задачи 1");
         fileBackedTaskManager.addTask(task1);
         assertNotNull(fileBackedTaskManager.getTaskById(task1.getTaskId()));
@@ -181,7 +173,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void deleteEpicTaskById() {
+    void deleteEpicTaskByIdTest() {
         EpicTask epicTask1 = new EpicTask("Эпик 1","Описание эпика 1");
         fileBackedTaskManager.addEpicTask(epicTask1);
         assertNotNull(fileBackedTaskManager.getEpicTaskById(epicTask1.getTaskId()));
@@ -201,7 +193,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void deleteSubtaskById() {
+    void deleteSubtaskByIdTest() {
         EpicTask epicTask1 = new EpicTask("Эпик 1","Описание эпика 1");
         fileBackedTaskManager.addEpicTask(epicTask1);
         Subtask subtask1 = new Subtask("Подзадача 1.1","Описание подзадачи 1.1", epicTask1.getTaskId());
@@ -225,7 +217,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void deleteAllTasks() {
+    void deleteAllTasksTest() {
         Task task1 = new Task("Задача 1","Описание задачи 1");
         Task task2 = new Task("Задача 2","Описание задачи 2");
         fileBackedTaskManager.addTask(task1);
@@ -247,7 +239,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void deleteAllEpicTasks() {
+    void deleteAllEpicTasksTest() {
         EpicTask epicTask1 = new EpicTask("Эпик 1","Описание эпика 1");
         EpicTask epicTask2 = new EpicTask("Эпик 2","Описание эпика 2");
         fileBackedTaskManager.addEpicTask(epicTask1);
@@ -269,7 +261,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void deleteAllSubtasks() {
+    void deleteAllSubtasksTest() {
         EpicTask epicTask1 = new EpicTask("Эпик 1","Описание эпика 1");
         fileBackedTaskManager.addEpicTask(epicTask1);
         Subtask subtask1 = new Subtask("Подзадача 1.1","Описание подзадачи 1.1", epicTask1.getTaskId());
@@ -294,7 +286,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void epicTaskStatusMustChangeDependingOnStatusSubtasks() {
+    void epicTaskStatusMustChangeDependingOnStatusSubtasksTest() {
         EpicTask epicTask1 = new EpicTask("Эпик 1","Описание эпика 1");
         fileBackedTaskManager.addEpicTask(epicTask1);
         Subtask subtask1 = new Subtask("Подзадача 1.1","Описание подзадачи 1.1", epicTask1.getTaskId());
@@ -363,7 +355,7 @@ class FileBackedTaskManagerTest {
         }
 
     @Test
-    void loadFromFile() {
+    void loadFromFileTest() {
         Task task1 = new Task("Задача 1", "Описание задачи 1");
         fileBackedTaskManager.addTask(task1);
         EpicTask epicTask1 = new EpicTask("Эпик 1", "Описание эпика 1");
@@ -392,7 +384,16 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void getFileBacked() {
+    void loadFromFileCheckExceptionIfFileIsIncorrectTest() {
+        File incorrecFile = null;
+        ManagerSaveException exception = assertThrows(ManagerSaveException.class, () -> {
+            FileBackedTaskManager fileBackedTaskManager1 = FileBackedTaskManager.loadFromFile(incorrecFile);
+        }, "Создание менеджера задач из некорректного файла должно приводить к исключению");
+        assertEquals("Файл пустой.", exception.getMessage());
+    }
+
+    @Test
+    void getFileBackedTest() {
         try {
             File file1 = File.createTempFile("class", ".csv");
             assertEquals(file1.getClass(), fileBackedTaskManager.getFile().getClass(), "Файл создаётся некорректно");
@@ -401,51 +402,51 @@ class FileBackedTaskManagerTest {
         }
     }
 
-        @Test
-        void testToString() {
-            fileBackedTaskManager.addTask(exampleTask);
-            String expected = String.format("%s,%s,%s,%s,%s,,,,", exampleTask.getTaskId(), "TASK",
-                    exampleTask.getName(), exampleTask.getDescription(), exampleTask.getTaskStatus());
-            String actual = fileBackedTaskManager.toString(exampleTask);
-            assertEquals(expected, actual, "Строки из задач не совпадают");
-        }
-
-        @Test
-        void testFromString() {
-            String taskInfo = "1,TASK,Задача 1,Описание задачи 1,NEW,,,,";
-            fileBackedTaskManager.addTask(FileBackedTaskManager.fromString(taskInfo));
-            assertEquals(exampleTask.getClass(), fileBackedTaskManager.getTaskById(1).getClass(), "Задачи не совпадают");
-        }
-
-        @Test
-        void testTaskWithTimesToString() {
-            Task task1 = new Task("Задача 1","Описание задачи 1");
-            fileBackedTaskManager.addTask(task1);
-            LocalDateTime startTime = LocalDateTime.of(2025, 6, 5, 12, 0);
-            Duration duration = Duration.ofMinutes(15);
-            task1.setStartTime(startTime);
-            task1.setDuration(duration);
-            task1.setEndTime();
-            String expected = String.format("%s,%s,%s,%s,%s,05.06.2025 12:00,05.06.2025 12:15,15,", task1.getTaskId(), "TASK",
-                    task1.getName(), task1.getDescription(), task1.getTaskStatus());
-            String actual = fileBackedTaskManager.toString(task1);
-            assertEquals(expected, actual, "Строки из задач не совпадают");
-        }
-
-        @Test
-        void testTaskWithTimesFromString() {
-            String taskInfo = "1,TASK,Задача 1,Описание задачи 1,NEW,05.06.2025 12:00,05.06.2025 12:15,15,";
-            fileBackedTaskManager.addTask(FileBackedTaskManager.fromString(taskInfo));
-            assertEquals(exampleTask.getClass(), fileBackedTaskManager.getTaskById(1).getClass(), "Задачи не совпадают");
-            assertEquals("2025-06-05T12:00", fileBackedTaskManager.getTaskById(1).getStartTime().toString());
-            assertEquals("2025-06-05T12:15", fileBackedTaskManager.getTaskById(1).getEndTime().toString());
-            assertEquals("PT15M", fileBackedTaskManager.getTaskById(1).getDuration().toString());
-        }
-
-        @Test
-        void creatingFileOnDirectoryResources() {
-            FileBackedTaskManager fileBackedTaskManager1 = new FileBackedTaskManager();
-            File dir = new File(fileBackedTaskManager1.getFile().getParentFile().toURI());
-            assertEquals("resources", dir.getName());
-        }
+    @Test
+    void testToStringTest() {
+        fileBackedTaskManager.addTask(exampleTask);
+        String expected = String.format("%s,%s,%s,%s,%s,,,,", exampleTask.getTaskId(), "TASK",
+                exampleTask.getName(), exampleTask.getDescription(), exampleTask.getTaskStatus());
+        String actual = fileBackedTaskManager.toString(exampleTask);
+        assertEquals(expected, actual, "Строки из задач не совпадают");
     }
+
+    @Test
+    void testFromStringTest() {
+        String taskInfo = "1,TASK,Задача 1,Описание задачи 1,NEW,,,,";
+        fileBackedTaskManager.addTask(FileBackedTaskManager.fromString(taskInfo));
+        assertEquals(exampleTask.getClass(), fileBackedTaskManager.getTaskById(1).getClass(), "Задачи не совпадают");
+    }
+
+    @Test
+    void testTaskWithTimesToStringTest() {
+        Task task1 = new Task("Задача 1","Описание задачи 1");
+        fileBackedTaskManager.addTask(task1);
+        LocalDateTime startTime = LocalDateTime.of(2025, 6, 5, 12, 0);
+        Duration duration = Duration.ofMinutes(15);
+        task1.setStartTime(startTime);
+        task1.setDuration(duration);
+        task1.setEndTime();
+        String expected = String.format("%s,%s,%s,%s,%s,05.06.2025 12:00,05.06.2025 12:15,15,", task1.getTaskId(), "TASK",
+                task1.getName(), task1.getDescription(), task1.getTaskStatus());
+        String actual = fileBackedTaskManager.toString(task1);
+        assertEquals(expected, actual, "Строки из задач не совпадают");
+    }
+
+    @Test
+    void testTaskWithTimesFromStringTest() {
+        String taskInfo = "1,TASK,Задача 1,Описание задачи 1,NEW,05.06.2025 12:00,05.06.2025 12:15,15,";
+        fileBackedTaskManager.addTask(FileBackedTaskManager.fromString(taskInfo));
+        assertEquals(exampleTask.getClass(), fileBackedTaskManager.getTaskById(1).getClass(), "Задачи не совпадают");
+        assertEquals("2025-06-05T12:00", fileBackedTaskManager.getTaskById(1).getStartTime().toString());
+        assertEquals("2025-06-05T12:15", fileBackedTaskManager.getTaskById(1).getEndTime().toString());
+        assertEquals("PT15M", fileBackedTaskManager.getTaskById(1).getDuration().toString());
+    }
+
+    @Test
+    void creatingFileOnDirectoryResourcesTest() {
+        FileBackedTaskManager fileBackedTaskManager1 = new FileBackedTaskManager();
+        File dir = new File(fileBackedTaskManager1.getFile().getParentFile().toURI());
+        assertEquals("resources", dir.getName());
+    }
+}
