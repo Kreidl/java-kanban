@@ -352,7 +352,7 @@ public class InMemoryTaskManager implements TaskManager {
                 (task1.getEndTime().isAfter(task2.getStartTime()) && task1.getStartTime().isBefore(task2.getEndTime()));
     }
 
-    public boolean isTaskIntersectWithOthers (Task task) {
+    public boolean isTaskIntersectWithOthers(Task task) {
         Task taskBefore =  prioritizedTasks.ceiling(task);
         Task taskAfter = prioritizedTasks.floor(task);
         if (task.getStartTime() == null || ((taskBefore == null) && taskAfter == null)) {
