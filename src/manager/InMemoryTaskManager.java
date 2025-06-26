@@ -12,6 +12,7 @@ import java.util.TreeSet;
 
 public class InMemoryTaskManager implements TaskManager {
     private int count = 0;
+    private int number = 0;
 
     protected final HashMap<Integer, Task> tasks;
     protected final HashMap<Integer, EpicTask> epicTasks;
