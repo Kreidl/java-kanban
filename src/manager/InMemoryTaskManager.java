@@ -344,7 +344,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     public TreeSet<Task> getPrioritizedTasks() {
         return prioritizedTasks;
-
     }
 
     public boolean isTwoTasksIntersect(Task task1, Task task2) {
