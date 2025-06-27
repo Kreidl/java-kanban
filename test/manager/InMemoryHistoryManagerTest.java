@@ -66,6 +66,14 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
+    void cannotAddDublicatedTasks() {
+        inMemoryHistoryManager.add(task1);
+        assertEquals(inMemoryHistoryManager.getHead().getElement(), task1, "Первая просмотренная задача некорректна");
+        inMemoryHistoryManager.add(task1);
+        assertEquals(1, inMemoryHistoryManager.getHistory().size(), "Количество задач в истории просмотров некорректно");
+    }
+
+    @Test
     void getHistoryTest() {
         inMemoryHistoryManager.add(task1);
         inMemoryHistoryManager.add(task2);
