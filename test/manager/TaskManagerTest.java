@@ -12,7 +12,6 @@ import tasks.TaskStatus;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -43,16 +42,9 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(task1.getClass(), taskManager.getTaskById(exampleTask.getTaskId()).getClass(), "Задача нужного класса не найдена");
         assertEquals(task1.getName(), taskManager.getTaskById(exampleTask.getTaskId()).getName(), "Задача с заданным именем не добавлена");
         assertEquals(task1.getDescription(), taskManager.getTaskById(exampleTask.getTaskId()).getDescription(), "Задача с заданным описанием не добавлена");
-        TreeSet<Task> testTasks = new TreeSet<>((t1, t2) -> {
-            if (t1.getStartTime().isBefore(t2.getStartTime())) {
-                return 1;
-            } else if (t1.getStartTime().isAfter(t2.getStartTime())) {
-                return -1;
-            }
-            return 0;
-        });;
-        testTasks.add(exampleTask);
-        assertEquals(testTasks ,taskManager.getPrioritizedTasks(), "Задача добавлена в список приоритета некорректно");
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(exampleTask);
+        assertEquals(tasks ,taskManager.getPrioritizedTasks(), "Задача добавлена в список приоритета некорректно");
     }
 
     @Test
@@ -81,16 +73,9 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(exampleSubtask.getClass(), epicTask1.getSubtasks().get(indexSubtask).getClass());
         assertEquals(subtask2.getName(), epicTask1.getSubtasks().get(indexSubtask).getName(), "Подзадача с заданным именем не добавлена в эпик");
         assertEquals(subtask2.getDescription(), epicTask1.getSubtasks().get(indexSubtask).getDescription(),"Подзадача с заданным описанием не добавлена в эпик");
-        TreeSet<Task> testTasks = new TreeSet<>((t1, t2) -> {
-            if (t1.getStartTime().isBefore(t2.getStartTime())) {
-                return 1;
-            } else if (t1.getStartTime().isAfter(t2.getStartTime())) {
-                return -1;
-            }
-            return 0;
-        });
-        testTasks.add(subtask1);
-        assertEquals(testTasks ,taskManager.getPrioritizedTasks(), "Подзадача добавлена в список приоритета некорректно");
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(subtask1);
+        assertEquals(tasks ,taskManager.getPrioritizedTasks(), "Подзадача добавлена в список приоритета некорректно");
     }
 
     @Test

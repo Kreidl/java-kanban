@@ -10,9 +10,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class EpicTask extends Task {
-    private LocalDateTime endTime;
+    protected LocalDateTime endTime;
 
-    ArrayList<Subtask> subtasks = new ArrayList<>();
+    private ArrayList<Subtask> subtasks = new ArrayList<>();
 
     public EpicTask(String name, String description) {
         super(name, description);
@@ -34,26 +34,16 @@ public class EpicTask extends Task {
 
     @Override
     public LocalDateTime getEndTime() {
-        try {
-            if (getStartTime() != null && getDuration() != null) {
-                endTime = getStartTime().plus(getDuration());
-            } else {
-                throw new NullPointerException("Время начала или продолжительность не могут быть пустыми");
-            }
-        } catch (NullPointerException exc) {
-            exc.getMessage();
-        }
         return endTime;
     }
 
     public void setDuration() {
-        Duration duration = null;
-        setStartTime();
-        setEndTime();
-        if (this.getEndTime() != null && this.getStartTime() != null) {
-            duration = Duration.between(this.getStartTime(), this.getEndTime());
-        }
-        super.setDuration(duration);
+        Optional<Duration> duration = subtasks.stream()
+                .filter(Objects::nonNull)
+                .map(Subtask::getDuration)
+                .filter(Objects::nonNull)
+                .reduce(Duration::plus);
+        super.setDuration(duration.get());
     }
 
     public void setStartTime() {
@@ -74,7 +64,11 @@ public class EpicTask extends Task {
                     .map(Task::getEndTime)
                     .filter(Objects::nonNull)
                     .max(Comparator.naturalOrder());
-            this.endTime = endTime.get();
+            if (endTime.isPresent()) {
+                this.endTime = endTime.get();
+            } else {
+                this.endTime = null;
+            }
         } else {
             this.endTime = null;
         }

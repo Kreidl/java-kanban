@@ -203,10 +203,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         } else {
             task.setStartTime(null);
         }
-        if (!end.isEmpty()) {
-            task.setEndTime();
-        } else {
-            task.setStartTime(null);
+        if (task.getType() == TaskType.EPIC) {
+            ((EpicTask) task).setEndTime();
         }
     }
 

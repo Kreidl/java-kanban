@@ -14,7 +14,6 @@ public class Task {
     private TaskStatus taskStatus;
     private Duration duration;
     private LocalDateTime startTime;
-    private LocalDateTime endTime;
 
     public Task(String name, String description, int taskId) {
         this.name = name;
@@ -42,21 +41,17 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime() {
         LocalDateTime endTime = null;
         try {
             if (startTime != null && duration != null) {
                 endTime = startTime.plus(duration);
             } else {
-                throw new NullPointerException("Время начала или продолжительность не могут быть пустыми");
+                throw new NullPointerException("Время начала или продолжительность не могут быть пустыми при расчёте времени окончания выполнения задачи");
             }
         } catch (NullPointerException exc) {
             exc.getMessage();
         }
-        this.endTime = endTime;
+        return endTime;
     }
 
     public Duration getDuration() {

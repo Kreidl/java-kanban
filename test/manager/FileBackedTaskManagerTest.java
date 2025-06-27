@@ -426,7 +426,6 @@ class FileBackedTaskManagerTest extends TaskManagerTest {
         Duration duration = Duration.ofMinutes(15);
         task1.setStartTime(startTime);
         task1.setDuration(duration);
-        task1.setEndTime();
         String expected = String.format("%s,%s,%s,%s,%s,05.06.2025 12:00,05.06.2025 12:15,15,", task1.getTaskId(), "TASK",
                 task1.getName(), task1.getDescription(), task1.getTaskStatus());
         String actual = fileBackedTaskManager.toString(task1);
