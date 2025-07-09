@@ -2,6 +2,8 @@ package tasks;
 
 import manager.TaskType;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -10,6 +12,8 @@ public class Task {
     private String description;
     private int taskId;
     private TaskStatus taskStatus;
+    private Duration duration;
+    private LocalDateTime startTime;
 
     public Task(String name, String description, int taskId) {
         this.name = name;
@@ -34,6 +38,30 @@ public class Task {
         this.description = description;
         this.taskId = taskId;
         this.taskStatus = taskStatus;
+    }
+
+    public LocalDateTime getEndTime() {
+        LocalDateTime endTime = null;
+        if (startTime != null && duration != null) {
+            endTime = startTime.plus(duration);
+        }
+        return endTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
     public TaskStatus getTaskStatus() {
