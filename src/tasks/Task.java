@@ -42,14 +42,8 @@ public class Task {
 
     public LocalDateTime getEndTime() {
         LocalDateTime endTime = null;
-        try {
-            if (startTime != null && duration != null) {
-                endTime = startTime.plus(duration);
-            } else {
-                throw new NullPointerException("Время начала или продолжительность не могут быть пустыми при расчёте времени окончания выполнения задачи");
-            }
-        } catch (NullPointerException exc) {
-            exc.getMessage();
+        if (startTime != null && duration != null) {
+            endTime = startTime.plus(duration);
         }
         return endTime;
     }
