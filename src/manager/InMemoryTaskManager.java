@@ -257,6 +257,9 @@ public class InMemoryTaskManager implements TaskManager {
                 if (prioritizedTasks.contains(subtask)) {
                     prioritizedTasks.remove(subtask);
                 }
+                if (inMemoryHistoryManager.getHistory().contains(subtask)) {
+                    inMemoryHistoryManager.remove(subtask.getTaskId());
+                }
             }
         }
         epicTasks.clear();
@@ -359,12 +362,12 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             if (taskBefore != null) {
                 if (isTwoTasksIntersect(task, taskBefore)) {
-                    throw new TaskIntersectWithOther("Задача пересекается с другой");
+                    throw new TaskIntersectWithOther("Задача пересекается с другой.");
                 }
             }
             if (taskAfter != null) {
                 if (isTwoTasksIntersect(task, taskAfter)) {
-                    throw new TaskIntersectWithOther("Задача пересекается с другой");
+                    throw new TaskIntersectWithOther("Задача пересекается с другой.");
                 }
             }
         }
