@@ -109,8 +109,9 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         task1.setDuration(Duration.ofMinutes(15));
         taskManager.addTask(task1);
         Task task2 = new Task("Обновлённое название задачи 1", "Обновлённое описание задачи 1", TaskStatus.IN_PROGRESS);
-        task2.setStartTime(LocalDateTime.of(2025, 5, 7, 14, 0));
-        task2.setDuration(Duration.ofMinutes(30));
+        //Проверяем с одинаковым временем, чтобы проверить, будет ли пересечение задач
+        task2.setStartTime(LocalDateTime.of(2025, 5, 6, 14, 0));
+        task2.setDuration(Duration.ofMinutes(15));
         taskManager.updateTask(task1, task2);
         assertEquals(task1, task2, "Задача не обновлена");
         assertEquals(task2.getStartTime(), taskManager.getPrioritizedTasks().getFirst().getStartTime(), "Задача в списке приоритета не обновлена");
@@ -468,7 +469,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
             subtask1.setDuration(Duration.ofMinutes(15));
             taskManager.addSubtask(subtask1);
         });
-        assertEquals("Задача пересекается с другой" ,exception.getMessage(), "Пересекающиеся задачи работают некорректно");
+        assertEquals("Задача пересекается с другой." ,exception.getMessage(), "Пересекающиеся задачи работают некорректно");
         //Когда начало первой задачи пересекается с окончанием второй задачи
         exception = Assertions.assertThrows(TaskIntersectWithOther.class, () -> {
             Task task1 = new Task("Задача 1", "Описание задачи 1");
@@ -482,7 +483,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
             subtask1.setDuration(Duration.ofMinutes(15));
             taskManager.addSubtask(subtask1);
         });
-        assertEquals("Задача пересекается с другой" ,exception.getMessage(), "Пересекающиеся задачи работают некорректно");
+        assertEquals("Задача пересекается с другой." ,exception.getMessage(), "Пересекающиеся задачи работают некорректно");
         //Когда начало и конец первой задачи совпадают с началом и концом второй задачи
         exception = Assertions.assertThrows(TaskIntersectWithOther.class, () -> {
             Task task1 = new Task("Задача 1", "Описание задачи 1");
@@ -496,7 +497,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
             subtask1.setDuration(Duration.ofMinutes(15));
             taskManager.addSubtask(subtask1);
         });
-        assertEquals("Задача пересекается с другой" ,exception.getMessage(), "Пересекающиеся задачи работают некорректно");
+        assertEquals("Задача пересекается с другой." ,exception.getMessage(), "Пересекающиеся задачи работают некорректно");
         //Когда начало и конец одной задачи находятся внутри продолжительности другой задачи
         exception = Assertions.assertThrows(TaskIntersectWithOther.class, () -> {
             Task task1 = new Task("Задача 1", "Описание задачи 1");
@@ -510,6 +511,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
             subtask1.setDuration(Duration.ofMinutes(30));
             taskManager.addSubtask(subtask1);
         });
-        assertEquals("Задача пересекается с другой" ,exception.getMessage(), "Пересекающиеся задачи работают некорректно");
+        assertEquals("Задача пересекается с другой." ,exception.getMessage(), "Пересекающиеся задачи работают некорректно");
     }
 }

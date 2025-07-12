@@ -1,5 +1,6 @@
 package manager;
 
+import exceptions.TaskIntersectWithOther;
 import tasks.EpicTask;
 import tasks.Subtask;
 import tasks.Task;
@@ -7,17 +8,17 @@ import tasks.Task;
 import java.util.ArrayList;
 
 public interface TaskManager {
-    void addTask(Task task);
+    void addTask(Task task) throws TaskIntersectWithOther;
 
     void addEpicTask(EpicTask epicTask);
 
     void addSubtask(Subtask subtask);
 
-    void updateTask(Task thisTask, Task updatedTask);
+    void updateTask(Task thisTask, Task updatedTask) throws TaskIntersectWithOther;
 
     void updateEpicTask(EpicTask thisEpicTask, EpicTask updatedEpicTask);
 
-    void updateSubtask(Subtask thisSubtask, Subtask updatedSubtask);
+    void updateSubtask(Subtask thisSubtask, Subtask updatedSubtask) throws TaskIntersectWithOther;
 
     void deleteTaskById(Task task);
 
