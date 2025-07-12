@@ -34,7 +34,7 @@ public class PrioritizedHandler extends BaseHttpHandler {
                 handleGetPrioritized(exchange);
                 break;
             default:
-                sendBadRequest(exchange, "Неизвестный метод запроса", 400);
+                sendBadRequest(exchange, "METHOD_NOT_ALLOWED", 405);
         }
     }
 
@@ -58,7 +58,7 @@ public class PrioritizedHandler extends BaseHttpHandler {
             }
         } catch (ElementNotFoundException | NumberFormatException | IOException e) {
             sendBadRequest(exchange, "Во время выполнения запроса ресурса по URL-адресу: " + exchange.getRequestURI()
-                    + ", произошла ошибка.\nПроверьте, пожалуйста, адрес и повторите попытку.", 404);
+                    + ", произошла ошибка.\nПроверьте, пожалуйста, адрес и повторите попытку.", 400);
         }
     }
 }

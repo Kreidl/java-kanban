@@ -67,7 +67,7 @@ class PrioritizedHandlerTest extends HttpTaskServerTest {
         url = URI.create("http://localhost:8080/prioritized/1");
         request = HttpRequest.newBuilder().uri(url).GET().build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(404, response.statusCode());
+        assertEquals(400, response.statusCode());
         assertEquals("Во время выполнения запроса ресурса по URL-адресу: /prioritized/1, произошла ошибка." +
                 "\nПроверьте, пожалуйста, адрес и повторите попытку.", response.body(), "Сообщение об ошибке некорректно");
     }
@@ -81,7 +81,7 @@ class PrioritizedHandlerTest extends HttpTaskServerTest {
         URI url = URI.create("http://localhost:8080/prioritized");
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(HttpRequest.BodyPublishers.ofString(taskJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(400, response.statusCode());
-        assertEquals("Неизвестный метод запроса", response.body(), "Сообщение об ошибке некорректно");
+        assertEquals(405, response.statusCode());
+        assertEquals("METHOD_NOT_ALLOWED", response.body(), "Сообщение об ошибке некорректно");
     }
 }

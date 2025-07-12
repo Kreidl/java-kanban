@@ -45,7 +45,7 @@ public class TaskHandler extends BaseHttpHandler {
                 handleDeleteTask(exchange);
                 break;
             default:
-                sendBadRequest(exchange, "Неизвестный метод запроса", 400);
+                sendBadRequest(exchange, "METHOD_NOT_ALLOWED", 405);
         }
     }
 
@@ -80,7 +80,7 @@ public class TaskHandler extends BaseHttpHandler {
         }
         } catch (ElementNotFoundException | NumberFormatException e) {
             sendBadRequest(exchange, "Во время выполнения запроса ресурса по URL-адресу: " + exchange.getRequestURI()
-                    + ", произошла ошибка.\nПроверьте, пожалуйста, адрес и повторите попытку.", 404);
+                    + ", произошла ошибка.\nПроверьте, пожалуйста, адрес и повторите попытку.", 400);
         }
     }
 
@@ -112,7 +112,7 @@ public class TaskHandler extends BaseHttpHandler {
                 }
             }
         } catch (JsonSyntaxException e) {
-            sendBadRequest(exchange, "Передана некорректная задача", 404);
+            sendBadRequest(exchange, "Передана некорректная задача", 400);
         }
     }
 
@@ -144,7 +144,7 @@ public class TaskHandler extends BaseHttpHandler {
             }
         } catch (ElementNotFoundException | NumberFormatException e) {
             sendBadRequest(exchange, "Во время выполнения запроса ресурса по URL-адресу: " + exchange.getRequestURI()
-                    + ", произошла ошибка.\nПроверьте, пожалуйста, адрес и повторите попытку.", 404);
+                    + ", произошла ошибка.\nПроверьте, пожалуйста, адрес и повторите попытку.", 400);
         }
     }
 }

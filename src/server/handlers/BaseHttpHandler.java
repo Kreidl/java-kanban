@@ -1,17 +1,33 @@
 package server.handlers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import manager.TaskManager;
+import manager.TaskType;
+import server.handlers.adapters.DurationAdapter;
+import server.handlers.adapters.LocalDateTimeAdapter;
+import server.handlers.adapters.TaskStatusAdapter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class BaseHttpHandler implements HttpHandler {
-    TaskManager taskManager;
+
+    protected TaskManager taskManager;
+
+    GsonBuilder gsonBuilder = new GsonBuilder();
+    protected final Gson gson;
 
     public BaseHttpHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
+        gson = gsonBuilder.setPrettyPrinting().serializeNulls()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .registerTypeAdapter(TaskType.class, new TaskStatusAdapter()).create();
     }
 
     @Override
@@ -40,6 +56,14 @@ public class BaseHttpHandler implements HttpHandler {
         exchange.sendResponseHeaders(rCode, resp.length);
         exchange.getResponseBody().write(resp);
         exchange.close();
+    }
+
+    public Gson getGson() {
+        return gson;
+    }
+
+    public TaskManager getTaskManager() {
+        return taskManager;
     }
 }
 

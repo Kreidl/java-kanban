@@ -4,28 +4,20 @@ import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
 import exceptions.TaskIntersectWithOther;
 import manager.TaskManager;
-import manager.TaskType;
+
 import server.exceptions.ElementNotFoundException;
-import server.handlers.adapters.DurationAdapter;
-import server.handlers.adapters.LocalDateTimeAdapter;
-import server.handlers.adapters.TaskStatusAdapter;
 import tasks.EpicTask;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
 public class EpicTaskHandler extends BaseHttpHandler {
 
-    GsonBuilder gsonBuilder = new GsonBuilder();
-    private final Gson gson = gsonBuilder.setPrettyPrinting().serializeNulls()
-            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-            .registerTypeAdapter(Duration.class, new DurationAdapter())
-            .registerTypeAdapter(TaskType.class, new TaskStatusAdapter()).create();
+
+
 
     public EpicTaskHandler(TaskManager taskManager) {
         super(taskManager);
@@ -45,7 +37,7 @@ public class EpicTaskHandler extends BaseHttpHandler {
                 handleDeleteEpicTask(exchange);
                 break;
             default:
-                sendBadRequest(exchange, "Неизвестный метод запроса", 400);
+                sendBadRequest(exchange, "METHOD_NOT_ALLOWED", 405);
         }
     }
 
@@ -80,7 +72,7 @@ public class EpicTaskHandler extends BaseHttpHandler {
             }
         } catch (ElementNotFoundException | NumberFormatException e) {
             sendBadRequest(exchange, "Во время выполнения запроса ресурса по URL-адресу: " + exchange.getRequestURI()
-                    + ", произошла ошибка.\nПроверьте, пожалуйста, адрес и повторите попытку.", 404);
+                    + ", произошла ошибка.\nПроверьте, пожалуйста, адрес и повторите попытку.", 400);
         }
     }
 
@@ -104,9 +96,9 @@ public class EpicTaskHandler extends BaseHttpHandler {
                 sendPostText(exchange, "Эпик обновлён.");
             }
         } catch (JsonSyntaxException e) {
-            sendBadRequest(exchange, "Передан некорректный эпик", 404);
+            sendBadRequest(exchange, "Передан некорректный эпик", 400);
         } catch (TaskIntersectWithOther e) {
-            sendBadRequest(exchange, e.getMessage(), 406);
+            sendBadRequest(exchange, e.getMessage(), 400);
         }
 
     }
@@ -140,7 +132,7 @@ public class EpicTaskHandler extends BaseHttpHandler {
             }
         } catch (ElementNotFoundException | NumberFormatException e) {
             sendBadRequest(exchange, "Во время выполнения запроса ресурса по URL-адресу: " + exchange.getRequestURI()
-                    + ", произошла ошибка.\nПроверьте, пожалуйста, адрес и повторите попытку.", 404);
+                    + ", произошла ошибка.\nПроверьте, пожалуйста, адрес и повторите попытку.", 400);
         }
     }
 }
